@@ -5,7 +5,7 @@ export default defineEventHandler(async (event) => {
   if (!body.name || !body.email || !body.message) {
     throw createError({
       statusCode: 400,
-      statusMessage: 'Tous les champs sont requis'
+      message: 'Tous les champs sont requis'
     })
   }
 
