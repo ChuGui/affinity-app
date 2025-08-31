@@ -29,7 +29,6 @@ export default defineEventHandler(async () => {
     const { data, error } = await supabase
       .from('conversation_summaries')
       .select('*')
-      .limit(5)
 
     if (error) {
       console.error('❌ Erreur Supabase:', error)
