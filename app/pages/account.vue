@@ -2,18 +2,28 @@
   <div class="container mx-auto px-4 py-8">
     <div class="max-w-7xl mx-auto">
       <div class="mb-8">
-        <h1 class="text-3xl font-bold text-gray-900 mb-4">Comptes GHL</h1>
-        <p class="text-gray-600">Gestion des comptes GoHighLevel connectés</p>
+        <h1 class="text-3xl font-bold text-gray-900 mb-4">Résumés de Conversations</h1>
+        <p class="text-gray-600">Gestion des résumés de conversations Supabase</p>
       </div>
 
-      <div class="mb-6">
+      <div class="mb-6 flex gap-4">
         <UButton 
           @click="fetchAccounts" 
           :loading="loading"
           icon="i-heroicons-arrow-path"
           size="lg"
         >
-          {{ loading ? 'Chargement...' : 'Récupérer les comptes' }}
+          {{ loading ? 'Chargement...' : 'Récupérer les conversations' }}
+        </UButton>
+        
+        <UButton 
+          @click="testSupabase" 
+          :loading="healthLoading"
+          icon="i-heroicons-heart"
+          variant="outline"
+          size="lg"
+        >
+          {{ healthLoading ? 'Test...' : 'Test Connexion Supabase' }}
         </UButton>
       </div>
 
@@ -28,10 +38,21 @@
         />
       </div>
 
+      <div v-if="healthStatus" class="mb-6">
+        <UAlert
+          icon="i-heroicons-check-circle"
+          color="green"
+          variant="soft"
+          :title="healthStatus"
+          :close-button="{ icon: 'i-heroicons-x-mark-20-solid', color: 'gray', variant: 'link', padded: false }"
+          @close="healthStatus = null"
+        />
+      </div>
+
       <div v-if="accounts.length > 0" class="bg-white shadow-lg rounded-lg overflow-hidden">
         <div class="px-6 py-4 bg-gray-50 border-b border-gray-200">
           <h2 class="text-lg font-semibold text-gray-900">
-            Liste des comptes ({{ accounts.length }} {{ accounts.length > 1 ? 'comptes' : 'compte' }})
+            Liste des conversations ({{ accounts.length }} {{ accounts.length > 1 ? 'conversations' : 'conversation' }})
           </h2>
         </div>
         
@@ -108,8 +129,8 @@
       <div v-else-if="!loading && !error" class="text-center py-12">
         <div class="text-gray-500">
           <Icon name="i-heroicons-inbox" class="mx-auto h-12 w-12 text-gray-400 mb-4" />
-          <h3 class="text-lg font-medium text-gray-900 mb-2">Aucun compte trouvé</h3>
-          <p class="text-gray-500">Cliquez sur le bouton pour récupérer les comptes depuis la base de données.</p>
+          <h3 class="text-lg font-medium text-gray-900 mb-2">Aucune conversation trouvée</h3>
+          <p class="text-gray-500">Cliquez sur le bouton pour récupérer les conversations depuis la base de données.</p>
         </div>
       </div>
     </div>
@@ -149,7 +170,9 @@ useHead({
 // Reactive data
 const accounts = ref<GHLAccount[]>([])
 const loading = ref(false)
+const healthLoading = ref(false)
 const error = ref<string | null>(null)
+const healthStatus = ref<string | null>(null)
 
 // Methods
 const fetchAccounts = async () => {
@@ -169,6 +192,28 @@ const fetchAccounts = async () => {
     error.value = err.data?.message || 'Erreur de connexion à l\'API'
   } finally {
     loading.value = false
+  }
+}
+
+const testSupabase = async () => {
+  healthLoading.value = true
+  error.value = null
+  healthStatus.value = null
+  
+  try {
+    const response = await $fetch<{ success: boolean; message?: string; error?: string; data?: any; count?: number }>('/api/test-supabase')
+    
+    if (response.success) {
+      healthStatus.value = `✅ ${response.message} - ${response.count || 0} enregistrements trouvés`
+      error.value = null
+    } else {
+      error.value = `❌ Test échoué: ${response.error}`
+    }
+  } catch (err: any) {
+    console.error('Erreur test Supabase:', err)
+    error.value = `❌ Erreur: ${err.data?.message || err.message || 'Connexion échouée'}`
+  } finally {
+    healthLoading.value = false
   }
 }
 
