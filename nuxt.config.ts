@@ -3,5 +3,12 @@ export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
   css: ['~/assets/css/main.css'],
-  modules: ['@nuxt/ui', '@nuxt/image']
+  modules: ['@nuxt/ui', '@nuxt/image'],
+  runtimeConfig: {
+    supabaseUrl: process.env.SUPABASE_URL,
+    supabaseServiceRoleKey: process.env.SUPABASE_SERVICE_ROLE_KEY,
+    public: {
+      supabaseUrl: process.env.SUPABASE_URL
+    }
+  }
 })

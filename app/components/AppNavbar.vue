@@ -16,6 +16,9 @@
             <NuxtLink to="/contact" class="text-gray-500 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">
               Contact
             </NuxtLink>
+            <NuxtLink to="/account" class="text-gray-500 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">
+              Comptes
+            </NuxtLink>
           </div>
         </div>
         
@@ -48,6 +51,9 @@
         </NuxtLink>
         <NuxtLink to="/contact" class="text-gray-500 hover:text-blue-600 block px-3 py-2 rounded-md text-base font-medium">
           Contact
+        </NuxtLink>
+        <NuxtLink to="/account" class="text-gray-500 hover:text-blue-600 block px-3 py-2 rounded-md text-base font-medium">
+          Comptes
         </NuxtLink>
       </div>
     </div>
