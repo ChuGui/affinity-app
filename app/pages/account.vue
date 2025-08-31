@@ -114,7 +114,7 @@
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap">
                   <UBadge 
-                    :color="account.access_token ? 'green' : 'red'" 
+                    :color="account.access_token ? 'success' : 'error'" 
                     variant="soft"
                   >
                     {{ account.access_token ? 'Connecté' : 'Déconnecté' }}
